@@ -1,0 +1,6 @@
+---
+- src: geerlingguy.nodejs
+- src: geerlingguy.git
+- src: geerlingguy.firewall
+- src: geerlingguy.postgresql
+- src: geerlingguy.nginx

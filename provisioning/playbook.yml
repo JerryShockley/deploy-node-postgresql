@@ -1,0 +1,39 @@
+---
+- hosts: all
+
+  vars_files:
+    - vars/main.yml
+  roles:
+    - geerlingguy.git
+    - geerlingguy.nodejs
+
+
+  tasks:
+    - name: Install Forever (to run our Node.js app).
+      npm: name=forever global=yes state=present
+
+    - name: Ensure Node.js app folder exists.
+      file:
+        path: "{{ node_apps_location }}"
+        state: directory
+
+    - name: Check out app from Github.
+      git:
+       repo: "{{ git_repo }}"
+       dest: "{{ node_apps_location }}"
+       accept_hostkey: true
+       force: yes
+      register: app_updated
+      # notify: restart nginx
+
+    - name: Install app dependencies defined in package.json.
+      npm: "path={{ node_apps_location }}/app"
+
+    - name: Check list of running Node.js apps.
+      command: forever list
+      register: forever_list
+      changed_when: false
+
+    - name: Start Node.js app.
+      command: "forever start {{ node_apps_location }}/app/app.js {{host}} {{port}}"
+      when: "forever_list.stdout.find(node_apps_location + '/app/app.js') == -1"

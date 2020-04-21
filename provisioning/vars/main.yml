@@ -1,0 +1,6 @@
+---
+node_apps_location: /var/www/myNodeApp
+nodejs_npm_global_packages: []
+git_repo: https://github.com/JerryShockley/express-hello-world-app.git
+# nodejs_install_npm_user: "{{ ansible_user }}"
+ansible_python_interpreter: /usr/bin/python3
